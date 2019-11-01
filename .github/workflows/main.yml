@@ -14,8 +14,7 @@ jobs:
         sudo apt-get install wine-stable wine-stable:i386 wine-binfmt mingw-w64 winetricks wget
     - name: Install wine dependencies
       run: |
-        export DISPLAY=
-        winetricks vcrun2017
+        winetricks --unattended vcrun2017
         wget https://sourceforge.net/projects/nsis/files/NSIS%203/3.04/nsis-3.04-setup.exe/download
         wine nsis-3.04-setup.exe /S
     - name: Build swipl
