@@ -20,7 +20,7 @@ jobs:
     - name: Build swipl
       run: |
         cp README.mingw ..
-        source README.mingw win32|win64
+        . README.mingw win64
         build_all
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
