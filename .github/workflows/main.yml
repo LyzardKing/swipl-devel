@@ -8,7 +8,10 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: MinGW install
-      run: sudo apt install wine-stable wine-binfmt mingw-w64 winetricks wget
+      run: |
+        sudo dpkg --add-architecture i386
+        sudo apt-get update
+        sudo apt install wine wine32 wine-binfmt mingw-w64 winetricks wget
     - name: Install wine dependencies
       run: |
         winetricks vcrun2017
