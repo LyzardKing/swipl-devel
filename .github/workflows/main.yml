@@ -15,8 +15,8 @@ jobs:
     - name: Install wine dependencies
       run: |
         xvfb-run winetricks --unattended vcrun2017
-        wget https://sourceforge.net/projects/nsis/files/NSIS%203/3.04/nsis-3.04-setup.exe/download
-        wine nsis-3.04-setup.exe /S
+        wget -q -O nsis.exe https://sourceforge.net/projects/nsis/files/NSIS%203/3.04/nsis-3.04-setup.exe/download
+        wine nsis.exe /S
     - name: Build swipl
       run: |
         cp README.mingw ..
