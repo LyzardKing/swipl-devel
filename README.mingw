@@ -201,17 +201,18 @@ make_mingw_dirs()
 download_gmp()
 { GMP_FILE=gmp-$GMP_VERSION.tar.bz2
 
-  if [ ! -f $GMP_FILE ]; then
-    wget ftp://ftp.gmplib.org/pub/gmp-$GMP_VERSION/$GMP_FILE -O $GMP_FILE
-    tar jxf $GMP_FILE
-  fi
+  [ -f $GMP_FILE ] || \
+    wget ftp://ftp.gmplib.org/pub/gmp-$GMP_VERSION/$GMP_FILE
+  tar jxf $GMP_FILE
 }
 
 build_gmp()
-{ cd gmp-$GMP_VERSION
-  ./configure --host=$CROSS --prefix=$install --enable-shared --disable-static
-  make
-  make install
+{ ( cd gmp-$GMP_VERSION
+    ./configure --host=$CROSS --prefix=$install \
+       --enable-shared --disable-static
+    make
+    make install
+  )
 }
 
 ###########################
@@ -440,7 +441,7 @@ download_libuuid()
 { UUID_FILE=uuid-$UUID_VERSION.tar.gz
 
   [ -f $UUID_FILE ] || \
-  curl ftp://ftp.ossp.org/pkg/lib/uuid/$UUID_FILE > $UUID_FILE
+  curl https://www.mirrorservice.org/sites/ftp.ossp.org/pkg/lib/uuid/$UUID_FILE > $UUID_FILE
   tar zxvf $UUID_FILE
 }
 
@@ -591,7 +592,7 @@ else
 fi
 dist_dlls+="libpcre-*.dll "
 dist_dlls+="libyaml-*.dll "
-dist_dlls+="libgcc*.dll "
+dist_dlls+="`(cd $install/bin && find . -name 'libgcc*.dll')` "
 if [ -r "$install/bin/libdwarf.dll" ]; then
   dist_dlls+=" libdwarf.dll"
 fi
@@ -609,22 +610,24 @@ copy_dlls()
 # Usage: build_swipl_packages [pkg ...]
 
 build_swipl_packages()
-{ enter_topdir
-  cd packages
-  export CPPFLAGS=-I$install/include
-  export PKGLDFLAGS=-I$install/lib
-  [ -z "$1" ] || export PKG="$1"
-  ./configure --host=$CROSS --prefix=$install
-  $MAKE 2>&1 | tee -a ../make.out
-  if [ "${PIPESTATUS[0]}" != 0 ]; then exit 1; fi
-  make install 2>&1 | tee -a ../make-install.out
-  if [ "${PIPESTATUS[0]}" != 0 ]; then exit 1; fi
-  make html-install || exit 1
+{ ( enter_topdir
+    cd packages
+    export CPPFLAGS=-I$install/include
+    export PKGLDFLAGS=-I$install/lib
+    [ -z "$1" ] || export PKG="$1"
+    ./configure --host=$CROSS --prefix=$install
+    $MAKE 2>&1 | tee -a ../make.out
+    if [ "${PIPESTATUS[0]}" != 0 ]; then exit 1; fi
+    make install 2>&1 | tee -a ../make-install.out
+    if [ "${PIPESTATUS[0]}" != 0 ]; then exit 1; fi
+    make html-install || exit 1
+  )
 }
 
 check_build()
-{ enter_topdir
-  [ -f make.out ] && scripts/check_build_log.sh make.out
+{ ( enter_topdir
+    [ -f make.out ] && scripts/check_build_log.sh make.out
+  )
 }
 
 build_swipl()
@@ -635,8 +638,9 @@ build_swipl()
 }
 
 clean_swipl()
-{ enter_topdir
-  make distclean
+{ ( enter_topdir
+    make distclean
+  )
 }
 
 uninstall_swipl()
@@ -645,9 +649,10 @@ uninstall_swipl()
 
 
 build_installer()
-{ enter_topdir
-  cd ${BUILDARCH-src}
-  make installer
+{ ( enter_topdir
+    cd ${BUILDARCH-src}
+    make installer
+  )
 }
 
 ###########################
