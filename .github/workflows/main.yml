@@ -19,8 +19,8 @@ jobs:
         wine nsis.exe /S
     - name: Build swipl
       run: |
-        cp README.mingw ..
-        cd ..
+        #cp README.mingw ..
+        #cd ..
         . README.mingw win64
         #download_prerequisites
         #build_all
