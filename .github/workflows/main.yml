@@ -11,7 +11,7 @@ jobs:
       run: |
         sudo dpkg --add-architecture i386
         sudo apt-get update
-        sudo apt install wine wine32 wine-binfmt mingw-w64 winetricks wget
+        sudo apt-get install wine-stable wine-stable:i386 wine-binfmt mingw-w64 winetricks wget
     - name: Install wine dependencies
       run: |
         winetricks vcrun2017
