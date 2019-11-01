@@ -22,6 +22,8 @@ jobs:
         cp README.mingw ..
         cd ..
         . README.mingw win64
-        build_all
+        #download_prerequisites
+        #build_all
+        build_release
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0

@@ -208,12 +208,10 @@ download_gmp()
 }
 
 build_gmp()
-{ ( cd gmp-$GMP_VERSION
-    ./configure --host=$CROSS --prefix=$install \
-       --enable-shared --disable-static
-    make
-    make install
-  )
+{ cd gmp-$GMP_VERSION
+  ./configure --host=$CROSS --prefix=$install --enable-shared --disable-static
+  make
+  make install
 }
 
 ###########################
@@ -611,24 +609,22 @@ copy_dlls()
 # Usage: build_swipl_packages [pkg ...]
 
 build_swipl_packages()
-{ ( enter_topdir
-    cd packages
-    export CPPFLAGS=-I$install/include
-    export PKGLDFLAGS=-I$install/lib
-    [ -z "$1" ] || export PKG="$1"
-    ./configure --host=$CROSS --prefix=$install
-    $MAKE 2>&1 | tee -a ../make.out
-    if [ "${PIPESTATUS[0]}" != 0 ]; then exit 1; fi
-    make install 2>&1 | tee -a ../make-install.out
-    if [ "${PIPESTATUS[0]}" != 0 ]; then exit 1; fi
-    make html-install || exit 1
-  )
+{ enter_topdir
+  cd packages
+  export CPPFLAGS=-I$install/include
+  export PKGLDFLAGS=-I$install/lib
+  [ -z "$1" ] || export PKG="$1"
+  ./configure --host=$CROSS --prefix=$install
+  $MAKE 2>&1 | tee -a ../make.out
+  if [ "${PIPESTATUS[0]}" != 0 ]; then exit 1; fi
+  make install 2>&1 | tee -a ../make-install.out
+  if [ "${PIPESTATUS[0]}" != 0 ]; then exit 1; fi
+  make html-install || exit 1
 }
 
 check_build()
-{ ( enter_topdir
-    [ -f make.out ] && scripts/check_build_log.sh make.out
-  )
+{ enter_topdir
+  [ -f make.out ] && scripts/check_build_log.sh make.out
 }
 
 build_swipl()
@@ -639,9 +635,8 @@ build_swipl()
 }
 
 clean_swipl()
-{ ( enter_topdir
-    make distclean
-  )
+{ enter_topdir
+  make distclean
 }
 
 uninstall_swipl()
@@ -650,10 +645,9 @@ uninstall_swipl()
 
 
 build_installer()
-{ ( enter_topdir
-    cd ${BUILDARCH-src}
-    make installer
-  )
+{ enter_topdir
+  cd ${BUILDARCH-src}
+  make installer
 }
 
 ###########################
