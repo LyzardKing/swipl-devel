@@ -1,0 +1,23 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: MinGW install
+      run: sudo apt install wine-stable wine-binfmt mingw-w64 winetricks wget
+    - name: Install wine dependencies
+      run: |
+        winetricks vcrun2017
+        wget https://sourceforge.net/projects/nsis/files/NSIS%203/3.04/nsis-3.04-setup.exe/download
+        wine nsis-3.04-setup.exe /S
+    - name: Build swipl
+      run: |
+        cp README.mingw ..
+        source README.mingw win32|win64
+        build_all
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
