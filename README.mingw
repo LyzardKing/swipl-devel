@@ -201,9 +201,10 @@ make_mingw_dirs()
 download_gmp()
 { GMP_FILE=gmp-$GMP_VERSION.tar.bz2
 
-  [ -f $GMP_FILE ] || \
-    wget ftp://ftp.gmplib.org/pub/gmp-$GMP_VERSION/$GMP_FILE
-  tar jxf $GMP_FILE
+  if [ ! -f $GMP_FILE ]; then
+    wget ftp://ftp.gmplib.org/pub/gmp-$GMP_VERSION/$GMP_FILE -O $GMP_FILE
+    tar jxf $GMP_FILE
+  fi
 }
 
 build_gmp()
