@@ -11,10 +11,10 @@ jobs:
       run: |
         sudo dpkg --add-architecture i386
         sudo apt-get update
-        sudo apt-get install wine-stable wine-stable:i386 wine-binfmt mingw-w64 winetricks wget
+        sudo apt-get install wine-stable wine-stable:i386 wine-binfmt mingw-w64 winetricks wget xvfb
     - name: Install wine dependencies
       run: |
-        winetricks --unattended vcrun2017
+        xvfb-run winetricks --unattended vcrun2017
         wget https://sourceforge.net/projects/nsis/files/NSIS%203/3.04/nsis-3.04-setup.exe/download
         wine nsis-3.04-setup.exe /S
     - name: Build swipl
